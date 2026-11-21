@@ -501,6 +501,28 @@
       gap: 14px;
     }
 
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .how-card {
+      padding: 24px;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: var(--panel);
+    }
+
+    .how-card h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    .how-card p { margin: 0; color: var(--muted); line-height: 1.8; }
+
+    @media (max-width: 820px) {
+      .how-grid { grid-template-columns: 1fr; }
+    }
+
+
     .flow-card {
       padding: 26px 24px;
       border: 1px solid var(--line-soft);
@@ -940,6 +962,16 @@
             <div class="step-number">3</div>
             <h3>2〜3日で完成</h3>
             <p>完成した動画を受け取って、LINEやInstagramですぐに使えます。</p>
+          </article>
+        </div>
+        <div class="how-grid">
+          <article class="how-card rv">
+            <h3>LINEの方</h3>
+            <p>フォーム送信のあと、LINEでご連絡します。写真はそのまま送って、声は言葉ごとにボイスメッセージで録音してください。完成した動画も、LINEでお渡しします。</p>
+          </article>
+          <article class="how-card rv" style="--d:.1s">
+            <h3>Instagramの方</h3>
+            <p>DMでご連絡します。写真はDMでそのまま、声はDMのボイスメッセージで言葉ごとに送ってください。完成した動画は、1本ずつDMでお送りします。</p>
           </article>
         </div>
       </div>
