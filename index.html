@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LINEでも、Instagramでも使える、あなただけの喋る動画スタンプ。言葉も、キャラも、雰囲気も、自分好みに選べます。">
+  <title>喋る動画スタンプ、作ります。｜AIスタンプ動画</title>
+  <style>
+    :root {
+      --bg: #0a0806;
+      --bg-2: #100c08;
+      --bg-3: #171208;
+      --panel: #151009;
+      --gold: #d9ad55;
+      --gold-light: #f6dc9a;
+      --gold-pale: #fbeec9;
+      --blush: #eec3ae;
+      --text: #fffaf0;
+      --muted: #d8c49c;
+      --soft: #b7a67f;
+      --line: rgba(217, 173, 85, 0.34);
+      --line-soft: rgba(217, 173, 85, 0.18);
+      --shadow: rgba(0, 0, 0, 0.5);
+      --serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, Meiryo, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    img, video { max-width: 100%; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ---------- top bar ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 0 6px;
+      color: var(--gold-light);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    .topbar .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .topbar .mark::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 16px rgba(217, 173, 85, 0.9);
+    }
+
+    .topbar .channel {
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      padding: clamp(30px, 6vw, 58px) 0 clamp(38px, 7vw, 64px);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -20% -30% auto;
+      height: 560px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(246, 220, 154, 0.16), transparent 46%),
+        radial-gradient(circle at 84% 8%, rgba(238, 195, 174, 0.12), transparent 42%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; text-align: center; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 20px;
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--gold-light);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .eyebrow::before, .eyebrow::after {
+      content: "✦";
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(2.15rem, 8.8vw, 5.2rem);
+      font-weight: 600;
+      line-height: 1.16;
+      letter-spacing: 0.01em;
+    }
+
+    h1 .gold {
+      background: linear-gradient(100deg, #f9e29b 5%, var(--gold) 48%, #a97e2f 78%, #f4d98c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      max-width: 620px;
+      margin: 0 auto 8px;
+      color: #f3e5c0;
+      font-size: clamp(1.05rem, 3.4vw, 1.35rem);
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .hero-sub {
+      max-width: 560px;
+      margin: 0 auto 34px;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    /* trio key visual */
+    .trio {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .trio figure {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #000;
+      box-shadow: 0 22px 54px var(--shadow);
+    }
+
+    .trio figure.lead-fig {
+      grid-column: 1 / -1;
+    }
+
+    .trio img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.2s cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+
+    .trio figure.lead-fig img { aspect-ratio: 4 / 3.05; object-position: 50% 22%; }
+    .trio figure:not(.lead-fig) img { aspect-ratio: 3 / 3.1; object-position: 50% 18%; }
+
+    .trio figure:hover img { transform: scale(1.045); }
+
+    .trio figcaption {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      padding: 6px 14px;
+      border: 1px solid rgba(246, 220, 154, 0.5);
+      border-radius: 999px;
+      background: rgba(5, 3, 1, 0.62);
+      backdrop-filter: blur(6px);
+      color: var(--gold-pale);
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 14px 28px;
+      overflow: hidden;
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #221503;
+      box-shadow: 0 12px 30px rgba(217, 173, 85, 0.25);
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -70%;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 38px rgba(217, 173, 85, 0.32); }
+    .btn:hover::after { left: 130%; }
+    .btn:active { transform: translateY(1px); }
+
+    .btn.secondary {
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--gold-light);
+      box-shadow: none;
+    }
+
+    .btn:focus-visible, a:focus-visible {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 3px;
+    }
+
+    /* ---------- sections ---------- */
+    section.band { padding: clamp(52px, 9vw, 92px) 0; }
+    section.band.alt { background: var(--bg-2); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+    section.band.deep { background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); border-top: 1px solid var(--line-soft); }
+
+    .section-head {
+      max-width: 720px;
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+
+    .section-label {
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-family: var(--serif);
+      font-size: clamp(1.72rem, 5.4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .section-head p { color: var(--muted); }
+
+    .gold-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 16px auto 0;
+      color: var(--gold);
+      font-size: 0.72rem;
+    }
+
+    .gold-rule::before, .gold-rule::after {
+      content: "";
+      width: 64px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .gold-rule::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+    /* ---------- custom features ---------- */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature {
+      padding: 24px 22px;
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 55%), var(--panel);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .feature:hover { transform: translateY(-4px); border-color: var(--line); }
+
+    .feature .f-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 13px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--gold-light);
+    }
+
+    .feature .f-icon svg { width: 21px; height: 21px; }
+
+    .feature h3 { margin-bottom: 6px; font-size: 1.14rem; }
+    .feature p { margin-bottom: 0; color: var(--muted); font-size: 0.94rem; }
+
+    /* ---------- demo ---------- */
+    .demo-frame {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 10px;
+      border: 1px solid rgba(246, 220, 154, 0.55);
+      border-radius: 28px;
+      background: linear-gradient(160deg, #1d1508, #0a0703);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 0 6px rgba(217, 173, 85, 0.06);
+    }
+
+    .demo-frame video {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 19px;
+      background: #000;
+    }
+
+    .demo-caption {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    /* ---------- products ---------- */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .product-grid .wide { grid-column: span 1; }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 46%), var(--panel);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(246, 220, 154, 0.65);
+      box-shadow: 0 26px 54px rgba(0, 0, 0, 0.42);
+    }
+
+    .card .card-img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: 50% 20%;
+    }
+
+    .card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 24px 24px 26px;
+    }
+
+    .plan-name {
+      margin-bottom: 6px;
+      color: var(--gold-light);
+      font-size: 0.86rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+    }
+
+    .card h3 { margin-bottom: 10px; font-size: 1.34rem; line-height: 1.4; }
+    .card p { color: var(--muted); font-size: 0.95rem; }
+
+    .price {
+      margin: 14px 0 16px;
+      font-size: 1.9rem;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .price small {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .spec-list {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 24px;
+      padding: 0;
+      list-style: none;
+      color: #eee0bd;
+      font-size: 0.95rem;
+    }
+
+    .spec-list li { padding-left: 1.2em; text-indent: -1.2em; }
+    .spec-list li::before { content: "✦"; margin-right: 8px; color: var(--gold); font-size: 0.72rem; }
+
+    .card .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+    .card .btn { flex: 1 1 140px; min-height: 54px; padding: 12px 16px; font-size: 0.95rem; }
+
+    .free-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+      padding: 22px 26px;
+      border: 1px dashed rgba(246, 220, 154, 0.55);
+      border-radius: 22px;
+      background: rgba(217, 173, 85, 0.06);
+    }
+
+    .free-strip h3 { margin-bottom: 2px; font-size: 1.16rem; }
+    .free-strip p { margin-bottom: 0; color: var(--muted); font-size: 0.93rem; }
+
+    /* ---------- samples ---------- */
+    .sample-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .sample-card {
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: var(--panel);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .sample-card:hover { transform: translateY(-4px); border-color: var(--line); }
+
+    .sample-card video { display: block; width: 100%; height: auto; background: #000; }
+
+    .sample-body { padding: 15px 17px 17px; }
+    .sample-body h3 { margin-bottom: 3px; font-size: 1.05rem; }
+    .sample-body p { margin-bottom: 0; color: var(--muted); font-size: 0.92rem; }
+
+    /* ---------- flow ---------- */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flow-card {
+      padding: 26px 24px;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: var(--panel);
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #221503;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(217, 173, 85, 0.28);
+    }
+
+    .flow-card h3 { margin-bottom: 8px; font-size: 1.18rem; }
+    .flow-card p { margin-bottom: 0; color: var(--muted); font-size: 0.94rem; }
+
+    /* ---------- order ---------- */
+    .order-panel {
+      padding: clamp(30px, 6vw, 52px);
+      border: 1px solid rgba(246, 220, 154, 0.6);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(217, 173, 85, 0.17), transparent 24rem),
+        radial-gradient(circle at 95% 100%, rgba(238, 195, 174, 0.1), transparent 20rem),
+        #140e05;
+      text-align: center;
+    }
+
+    .order-panel p { max-width: 640px; margin: 0 auto 26px; color: var(--muted); }
+
+    .order-panel h2 { font-size: clamp(1.5rem, 6.6vw, 3rem); }
+
+    /* phrase unit: line breaks only between units */
+    .nb { display: inline-block; }
+
+    .order-panel .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .order-panel .btn { flex: 1 1 220px; max-width: 320px; }
+
+    .notice {
+      max-width: 760px;
+      margin: 26px auto 0;
+      padding: 17px 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .cross-link {
+      padding: 30px 0 6px;
+      text-align: center;
+    }
+
+    .cross-link a {
+      color: var(--soft);
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 2px;
+    }
+
+    footer {
+      padding: 26px 0 92px;
+      color: #998a63;
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    /* ---------- sticky CTA (mobile) ---------- */
+    .sticky-cta {
+      position: fixed;
+      right: 14px;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      left: 14px;
+      z-index: 40;
+      display: none;
+    }
+
+    .sticky-cta .btn { width: 100%; min-height: 56px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55); }
+
+    /* ---------- animations ---------- */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero .anim {
+      opacity: 0;
+      animation: rise 1s cubic-bezier(0.2, 0.65, 0.25, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+
+    .js-rv .rv {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.9s cubic-bezier(0.2, 0.65, 0.25, 1), transform 0.9s cubic-bezier(0.2, 0.65, 0.25, 1);
+      transition-delay: var(--d, 0s);
+    }
+
+    .js-rv .rv.in { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero .anim { opacity: 1; animation: none; }
+      .js-rv .rv { opacity: 1; transform: none; transition: none; }
+      .trio img, .card, .feature, .sample-card, .btn { transition: none; }
+    }
+
+    /* ---------- responsive ---------- */
+    @media (min-width: 901px) {
+      .trio { grid-template-columns: 1.14fr 1fr 1fr; }
+      .trio figure.lead-fig { grid-column: auto; }
+      .trio figure.lead-fig img { aspect-ratio: 3 / 3.6; }
+      .trio figure:not(.lead-fig) img { aspect-ratio: 3 / 3.6; }
+      .sample-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .feature-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .product-grid .wide { grid-column: span 1; }
+    }
+
+    @media (max-width: 900px) {
+      .product-grid, .flow-grid { grid-template-columns: 1fr; }
+      .sticky-cta { display: block; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 0 14px; }
+      .btn { width: 100%; }
+      .hero-cta .btn, .order-panel .btn { max-width: none; }
+      .card .btn { width: auto; }
+      .free-strip { flex-direction: column; align-items: stretch; text-align: center; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .sample-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar" aria-label="ページ情報">
+      <div class="mark">AIスタンプ動画</div>
+      <div class="channel">LINE / Instagram 対応</div>
+    </header>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="wrap hero-inner">
+        <p class="eyebrow anim" style="--d:.05s">あなただけの動画スタンプ</p>
+        <h1 class="anim" style="--d:.15s">喋る動画スタンプ、<br><span class="gold">作ります。</span></h1>
+        <p class="hero-lead anim" style="--d:.28s">言葉も、キャラも、雰囲気も。<br><span class="nb">自分好みに選べる、</span><span class="nb">あなただけの動画スタンプ。</span></p>
+        <p class="hero-sub anim" style="--d:.38s">LINEでも、Instagramでも使えます。言葉ごとに、動きと表情が変わります。</p>
+
+        <div class="trio anim" style="--d:.5s">
+          <figure class="lead-fig">
+            <img src="hero-day.jpg" alt="AI事務員レイナのキービジュアル" loading="eager">
+            <figcaption>レイナ</figcaption>
+          </figure>
+          <figure>
+            <img src="hero-young.jpg" alt="イケ兄のキービジュアル" loading="eager">
+            <figcaption>イケ兄</figcaption>
+          </figure>
+          <figure>
+            <img src="hero-mature.jpg" alt="イケおじのキービジュアル" loading="eager">
+            <figcaption>イケおじ</figcaption>
+          </figure>
+        </div>
+
+        <div class="hero-cta anim" style="--d:.65s">
+          <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォームへ</a>
+          <a class="btn secondary" href="#demo">デモ動画を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM -->
+    <section class="band alt" aria-labelledby="custom-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Custom</p>
+          <h2 id="custom-title">細かく、自分好みに。</h2>
+          <p><span class="nb">選ぶ楽しさが、</span><span class="nb">そのまま「私だけのひとつ」に</span><span class="nb">なります。</span></p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature rv">
+            <span class="f-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+            <h3>言葉が選べる</h3>
+            <p>候補から選ぶだけ。プロなら、言葉を全部オリジナルで作ることもできます。</p>
+          </article>
+
+          <article class="feature rv" style="--d:.08s">
+            <span class="f-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <h3>キャラが選べる</h3>
+            <p>レイナ、イケ兄、イケおじ。お気に入りのキャラクターで作れます。</p>
+          </article>
+
+          <article class="feature rv" style="--d:.16s">
+            <span class="f-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2z"/></svg></span>
+            <h3><span class="nb">雰囲気が</span><span class="nb">指定できる</span></h3>
+            <p>上品、明るい、セクシー、かわいい、お任せ。イメージに合わせて選べます。</p>
+          </article>
+
+          <article class="feature rv" style="--d:.24s">
+            <span class="f-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-4 4L4.62 13.38a2 2 0 0 0 0 2.83l.06.06a2 2 0 0 0 2.83 0L15 9a4 4 0 0 1 4-4l.54-2.62a.5.5 0 0 0-.16-.37z"/><circle cx="7.5" cy="16.5" r="1.5"/></svg></span>
+            <h3><span class="nb">衣装・場所も</span><span class="nb">指定できる</span></h3>
+            <p>プロプランでは、雰囲気・衣装・場所を細かく指定できます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section class="band" id="demo" aria-labelledby="demo-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Demo</p>
+          <h2 id="demo-title">まずは、デモ動画で。</h2>
+          <p>実際に喋る様子を、見てください。</p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="demo-frame rv">
+          <video controls playsinline preload="metadata" poster="thumb-day.jpg" aria-label="AI事務員レイナのデモ動画">
+            <source src="reina-demo.mp4" type="video/mp4">
+            お使いのブラウザでは動画を再生できません。
+          </video>
+        </div>
+        <p class="demo-caption rv">デモ動画｜AI事務員レイナ</p>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="band alt" aria-labelledby="products-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Products</p>
+          <h2 id="products-title">選べる、5つの形。</h2>
+          <p><span class="nb">作ってあるセットを買うことも、</span><span class="nb">言葉やキャラクターを指定して</span><span class="nb">注文制作することもできます。</span></p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="product-grid">
+          <article class="card rv">
+            <img class="card-img" src="hero-day.jpg" alt="AI事務員レイナ" loading="lazy">
+            <div class="card-body">
+              <p class="plan-name">既製品セット</p>
+              <h3>レイナ 20本セット</h3>
+              <p>「お知らせ」「見積書、できたよ」など、仕事の連絡を短い動画で伝えます。</p>
+              <div class="price"><small>買い切り</small><br>1,980円</div>
+              <ul class="spec-list">
+                <li>言葉ごとに動きと表情が変わる20本</li>
+                <li>LINEのKeepメモ、InstagramのDMで送信</li>
+              </ul>
+              <div class="cta-row">
+                <a class="btn" href="https://mirei-official.booth.pm/items/9188786" target="_blank" rel="noopener">BOOTHで買う</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv" style="--d:.08s">
+            <img class="card-img" src="hero-young.jpg" alt="イケ兄" loading="lazy">
+            <div class="card-body">
+              <p class="plan-name">既製品セット</p>
+              <h3>イケ兄 20本セット</h3>
+              <p>爽やかなイケ兄事務員（20代後半）。社内の連絡から、取引先への挨拶まで。</p>
+              <div class="price"><small>買い切り</small><br>1,980円</div>
+              <ul class="spec-list">
+                <li>言葉ごとに動きと表情が変わる20本</li>
+                <li>LINEのKeepメモ、InstagramのDMで送信</li>
+              </ul>
+              <div class="cta-row">
+                <a class="btn" href="https://mirei-official.booth.pm/items/9190587" target="_blank" rel="noopener">BOOTHで買う</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv" style="--d:.16s">
+            <img class="card-img" src="hero-mature.jpg" alt="イケおじ" loading="lazy">
+            <div class="card-body">
+              <p class="plan-name">既製品セット</p>
+              <h3>イケおじ 20本セット</h3>
+              <p>落ち着いた低音ボイスのイケおじ事務員。目上の方や取引先にも安心してお使いいただけます。</p>
+              <div class="price"><small>買い切り</small><br>1,980円</div>
+              <ul class="spec-list">
+                <li>言葉ごとに動きと表情が変わる20本</li>
+                <li>LINEのKeepメモ、InstagramのDMで送信</li>
+              </ul>
+              <div class="cta-row">
+                <a class="btn" href="https://mirei-official.booth.pm/items/9189861" target="_blank" rel="noopener">BOOTHで買う</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv">
+            <div class="card-body">
+              <p class="plan-name">注文制作</p>
+              <h3>言葉を指定して作る</h3>
+              <p>使いたい言葉やキャラクターを指定して、注文制作できます。</p>
+              <div class="price"><small>注文制作</small><br>2,000円〜</div>
+              <ul class="spec-list">
+                <li>言葉が選べる</li>
+                <li>キャラが選べる</li>
+                <li>雰囲気も指定できる</li>
+              </ul>
+              <div class="cta-row">
+                <a class="btn" href="https://coconala.com/services/4521441" target="_blank" rel="noopener">ココナラで注文</a>
+                <a class="btn secondary" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">フォームから</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card rv" style="--d:.08s">
+            <div class="card-body">
+              <p class="plan-name">プロプラン</p>
+              <h3>全部オリジナルで作る</h3>
+              <p>決まった言葉ではなく、お店や会社に合わせた言葉で作りたい方へ。</p>
+              <div class="price"><small>昼版</small><br>7,980円</div>
+              <ul class="spec-list">
+                <li>言葉を全部オリジナルで制作</li>
+                <li>雰囲気・衣装・場所を細かく指定</li>
+                <li>名前入り呼びかけ込み</li>
+              </ul>
+              <div class="cta-row">
+                <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">プロで申し込む</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="free-strip rv">
+          <div>
+            <h3>無料お試し3本セット</h3>
+            <p>まずはレイナの3本を、無料でお試しいただけます。</p>
+          </div>
+          <a class="btn secondary" href="https://mirei-official.booth.pm/items/9188868" target="_blank" rel="noopener">BOOTHで受け取る</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAMPLES -->
+    <section class="band" id="samples" aria-labelledby="samples-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Samples</p>
+          <h2 id="samples-title"><span class="nb">実際に再生して、</span><span class="nb">見てください。</span></h2>
+          <p>昼版は短く、分かりやすく作ります。</p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="sample-grid">
+          <article class="sample-card rv">
+            <video controls playsinline preload="metadata" poster="thumb-day.jpg" aria-label="レイナのお知らせサンプル動画">
+              <source src="02-oshirase.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>レイナ｜お知らせ</h3>
+              <p>封筒を差し出して、「お知らせ、お願いね」。</p>
+            </div>
+          </article>
+
+          <article class="sample-card rv" style="--d:.06s">
+            <video controls playsinline preload="metadata" poster="thumb-day.jpg" aria-label="レイナの見積書サンプル動画">
+              <source src="04-mitsumori.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>レイナ｜見積書</h3>
+              <p>書類を掲げて、「見積書、できたよ」。</p>
+            </div>
+          </article>
+
+          <article class="sample-card rv" style="--d:.12s">
+            <video controls playsinline preload="metadata" poster="thumb-male-young.jpg" aria-label="イケ兄のサンプル動画">
+              <source src="young-02.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>男性版｜イケ兄</h3>
+              <p>爽やかな事務員タイプのサンプルです。</p>
+            </div>
+          </article>
+
+          <article class="sample-card rv" style="--d:.18s">
+            <video controls playsinline preload="metadata" poster="thumb-male-mature.jpg" aria-label="イケおじのサンプル動画">
+              <source src="mature-01.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>男性版｜イケおじ</h3>
+              <p>落ち着いた事務員タイプのサンプルです。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLOW -->
+    <section class="band alt" aria-labelledby="flow-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Flow</p>
+          <h2 id="flow-title">申し込みは、3ステップ。</h2>
+          <p><span class="nb">細かい希望は、</span><span class="nb">フォームでボタンを選ぶだけ。</span><span class="nb">書く項目は少なくしてあります。</span></p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="flow-grid">
+          <article class="flow-card rv">
+            <div class="step-number">1</div>
+            <h3>フォームを送る</h3>
+            <p>プラン、キャラクター、使いたい言葉、雰囲気を選びます。</p>
+          </article>
+
+          <article class="flow-card rv" style="--d:.1s">
+            <div class="step-number">2</div>
+            <h3>写真と声を送る</h3>
+            <p>必要な写真と声を送るだけです。</p>
+          </article>
+
+          <article class="flow-card rv" style="--d:.2s">
+            <div class="step-number">3</div>
+            <h3>2〜3日で完成</h3>
+            <p>完成した動画を受け取って、LINEやInstagramですぐに使えます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER -->
+    <section class="band deep" aria-labelledby="order-title">
+      <div class="wrap">
+        <div class="order-panel rv">
+          <p class="section-label">Order</p>
+          <h2 id="order-title">まずは、<br><span class="nb">申し込みフォームから。</span></h2>
+          <p>買ってすぐ使いたい方はBOOTH、言葉や仕上がりを指定したい方はフォームまたはココナラからご注文ください。</p>
+          <div class="cta-row">
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォーム</a>
+            <a class="btn secondary" href="https://mirei-official.booth.pm/items/9188786" target="_blank" rel="noopener">BOOTH（レイナ）</a>
+            <a class="btn secondary" href="https://coconala.com/services/4521441" target="_blank" rel="noopener">ココナラ昼版</a>
+            <a class="btn secondary" href="https://mirei-official.booth.pm/items/9188868" target="_blank" rel="noopener">無料お試し</a>
+          </div>
+          <div class="notice">完成動画の加工・改変・転売は禁止です。購入者ご本人・ご依頼のお店の業務、営業利用の範囲で<span class="nb">お使いください。</span></div>
+        </div>
+
+        <div class="cross-link">
+          <a href="night.html">夜のお店向けのご案内はこちら</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>AIスタンプ動画｜喋る動画スタンプ制作</footer>
+
+  <div class="sticky-cta">
+    <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォームへ</a>
+  </div>
+
+  <script>
+    (function () {
+      if (!('IntersectionObserver' in window)) return;
+      document.documentElement.classList.add('js-rv');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</body>
+</html>

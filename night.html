@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="夜のお店のための、お店専用の営業動画。店名ロゴと締めの挨拶画面が標準で入ります。">
+  <title>あなたが主役の、営業動画。｜AIスタンプ動画・夜版</title>
+  <style>
+    :root {
+      --bg: #050403;
+      --bg-2: #0a0705;
+      --bg-3: #100b06;
+      --panel: #0d0906;
+      --gold: #d9ad55;
+      --gold-light: #f6dc9a;
+      --gold-pale: #fbeec9;
+      --text: #fdf6e3;
+      --muted: #cdb488;
+      --soft: #a68d5c;
+      --line: rgba(217, 173, 85, 0.36);
+      --line-soft: rgba(217, 173, 85, 0.18);
+      --serif: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", YuMincho, "Noto Serif JP", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", YuGothic, Meiryo, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    img, video { max-width: 100%; }
+    h1, h2, h3, p { margin-top: 0; }
+
+    .wrap {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ---------- top bar ---------- */
+    .topbar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 0;
+      color: var(--gold-light);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+    }
+
+    .topbar .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .topbar .mark::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 16px rgba(217, 173, 85, 0.95);
+    }
+
+    .topbar .channel {
+      color: #e8d5a5;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 16%;
+      animation: heroZoom 14s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.1); }
+      to { transform: scale(1.0); }
+    }
+
+    .hero-shade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(3, 2, 1, 0.55) 0%, rgba(3, 2, 1, 0.05) 34%, rgba(3, 2, 1, 0.28) 58%, rgba(5, 4, 3, 0.94) 88%, var(--bg) 100%),
+        radial-gradient(circle at 50% 110%, rgba(217, 173, 85, 0.16), transparent 55%);
+    }
+
+    .hero-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 96svh;
+      padding: 110px 0 46px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 auto 20px;
+      color: var(--gold-light);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+    }
+
+    .eyebrow::before, .eyebrow::after {
+      content: "";
+      width: 38px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .eyebrow::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+    h1 {
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 8.2vw, 4.4rem);
+      font-weight: 600;
+      line-height: 1.28;
+      letter-spacing: 0.03em;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
+    }
+
+    h1 .gold {
+      background: linear-gradient(100deg, #f9e29b 5%, var(--gold) 48%, #b0822f 78%, #f4d98c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-lead {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      color: #f6ead0;
+      font-size: clamp(1.02rem, 3.4vw, 1.28rem);
+      font-weight: 700;
+      line-height: 1.75;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 14px 30px;
+      overflow: hidden;
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #221503;
+      box-shadow: 0 14px 34px rgba(217, 173, 85, 0.3);
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -70%;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.65s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 20px 42px rgba(217, 173, 85, 0.38); }
+    .btn:hover::after { left: 130%; }
+    .btn:active { transform: translateY(1px); }
+
+    .btn.secondary {
+      background: rgba(3, 2, 1, 0.45);
+      color: var(--gold-light);
+      box-shadow: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn:focus-visible, a:focus-visible {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 3px;
+    }
+
+    /* ---------- hero video ---------- */
+    .hero-video-band {
+      padding: clamp(44px, 8vw, 76px) 0 clamp(52px, 9vw, 88px);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(217, 173, 85, 0.1), transparent 30rem),
+        var(--bg);
+    }
+
+    .ornate-frame {
+      position: relative;
+      max-width: 470px;
+      margin: 0 auto;
+      padding: 12px;
+      border: 1px solid rgba(246, 220, 154, 0.65);
+      border-radius: 26px;
+      background: linear-gradient(165deg, #1c1307, #070402);
+      box-shadow: 0 34px 80px rgba(0, 0, 0, 0.65), 0 0 60px rgba(217, 173, 85, 0.1);
+    }
+
+    .ornate-frame::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(217, 173, 85, 0.3);
+      border-radius: 21px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .ornate-frame video {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      background: #000;
+    }
+
+    .video-caption {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+
+    .video-caption b { color: var(--gold-light); font-weight: 800; }
+
+    .hero-points {
+      display: grid;
+      gap: 12px;
+      max-width: 680px;
+      margin: 40px auto 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-points li {
+      padding: 15px 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+      color: #eee0bd;
+      font-size: 0.98rem;
+      text-align: center;
+    }
+
+    .hero-points b { color: var(--gold-light); }
+
+    /* ---------- sections ---------- */
+    section.band { padding: clamp(56px, 10vw, 100px) 0; }
+    section.band.alt { background: var(--bg-2); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+    section.band.deep { background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); border-top: 1px solid var(--line-soft); }
+
+    .section-head {
+      max-width: 700px;
+      margin: 0 auto 34px;
+      text-align: center;
+    }
+
+    .section-label {
+      margin-bottom: 12px;
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-family: var(--serif);
+      font-size: clamp(1.78rem, 5.6vw, 3.1rem);
+      font-weight: 600;
+      line-height: 1.32;
+      letter-spacing: 0.02em;
+    }
+
+    .section-head p { color: var(--muted); }
+
+    .gold-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 18px auto 0;
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+
+    .gold-rule::before, .gold-rule::after {
+      content: "";
+      width: 64px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .gold-rule::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+    /* ---------- products ---------- */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      padding: 30px 28px;
+      border: 1px solid var(--line-soft);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 46%), var(--panel);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.34);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(246, 220, 154, 0.65);
+      box-shadow: 0 28px 58px rgba(0, 0, 0, 0.46);
+    }
+
+    .card.featured {
+      border-color: rgba(246, 220, 154, 0.75);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(217, 173, 85, 0.18), transparent 15rem),
+        linear-gradient(180deg, #201605, #0d0906);
+    }
+
+    .plan-name {
+      margin-bottom: 6px;
+      color: var(--gold-light);
+      font-size: 0.88rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+    }
+
+    .card h3 { margin-bottom: 10px; font-size: 1.36rem; line-height: 1.45; }
+    .card p { color: var(--muted); font-size: 0.96rem; }
+
+    .price {
+      margin: 16px 0 18px;
+      font-size: 2rem;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .price small { color: var(--muted); font-size: 0.9rem; font-weight: 700; }
+
+    .spec-list {
+      display: grid;
+      gap: 9px;
+      margin: 0 0 26px;
+      padding: 0;
+      list-style: none;
+      color: #eee0bd;
+      font-size: 0.96rem;
+    }
+
+    .spec-list li { padding-left: 1.2em; text-indent: -1.2em; }
+    .spec-list li::before { content: "◆"; margin-right: 9px; color: var(--gold); font-size: 0.68rem; }
+
+    .card .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+    .card .btn { flex: 1 1 150px; min-height: 54px; padding: 12px 16px; font-size: 0.95rem; }
+
+    /* ---------- samples ---------- */
+    .sample-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .sample-card {
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: var(--panel);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .sample-card:hover { transform: translateY(-4px); border-color: var(--line); }
+
+    .sample-card video { display: block; width: 100%; height: auto; background: #000; }
+
+    .sample-body { padding: 16px 18px 18px; text-align: center; }
+    .sample-body h3 { margin-bottom: 3px; font-family: var(--serif); font-size: 1.14rem; letter-spacing: 0.04em; }
+    .sample-body p { margin-bottom: 0; color: var(--muted); font-size: 0.92rem; }
+
+    /* ---------- promise ---------- */
+    .promise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .promise {
+      padding: 28px 24px;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 55%), var(--panel);
+      text-align: center;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .promise:hover { transform: translateY(-4px); border-color: var(--line); }
+
+    .promise .p-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 15px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--gold-light);
+    }
+
+    .promise .p-icon svg { width: 23px; height: 23px; }
+    .promise h3 { margin-bottom: 8px; font-size: 1.14rem; }
+    .promise p { margin-bottom: 0; color: var(--muted); font-size: 0.93rem; }
+
+    /* ---------- flow ---------- */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flow-card {
+      padding: 28px 24px;
+      border: 1px solid var(--line-soft);
+      border-radius: 22px;
+      background: var(--panel);
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #221503;
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      box-shadow: 0 12px 26px rgba(217, 173, 85, 0.3);
+    }
+
+    .flow-card h3 { margin-bottom: 8px; font-size: 1.18rem; }
+    .flow-card p { margin-bottom: 0; color: var(--muted); font-size: 0.94rem; }
+
+    /* ---------- order ---------- */
+    .order-panel {
+      padding: clamp(32px, 6vw, 56px);
+      border: 1px solid rgba(246, 220, 154, 0.62);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(217, 173, 85, 0.18), transparent 24rem),
+        radial-gradient(circle at 98% 100%, rgba(217, 173, 85, 0.1), transparent 20rem),
+        #120c05;
+      text-align: center;
+    }
+
+    .order-panel p { max-width: 620px; margin: 0 auto 28px; color: var(--muted); }
+
+    .order-panel h2 { font-size: clamp(1.5rem, 6.6vw, 3rem); }
+
+    /* phrase unit: line breaks only between units */
+    .nb { display: inline-block; }
+
+    .order-panel .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .order-panel .btn { flex: 1 1 220px; max-width: 320px; }
+
+    .notice {
+      max-width: 760px;
+      margin: 28px auto 0;
+      padding: 17px 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .cross-link { padding: 32px 0 6px; text-align: center; }
+    .cross-link a {
+      color: var(--soft);
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 2px;
+    }
+
+    footer {
+      padding: 26px 0 92px;
+      color: #8d7c52;
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    /* ---------- sticky CTA ---------- */
+    .sticky-cta {
+      position: fixed;
+      right: 14px;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      left: 14px;
+      z-index: 40;
+      display: none;
+    }
+
+    .sticky-cta .btn { width: 100%; min-height: 56px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6); }
+
+    /* ---------- animations ---------- */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero .anim {
+      opacity: 0;
+      animation: rise 1.15s cubic-bezier(0.2, 0.65, 0.25, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+
+    .js-rv .rv {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 1s cubic-bezier(0.2, 0.65, 0.25, 1), transform 1s cubic-bezier(0.2, 0.65, 0.25, 1);
+      transition-delay: var(--d, 0s);
+    }
+
+    .js-rv .rv.in { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-img { animation: none; }
+      .hero .anim { opacity: 1; animation: none; }
+      .js-rv .rv { opacity: 1; transform: none; transition: none; }
+      .card, .promise, .sample-card, .btn { transition: none; }
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 900px) {
+      .product-grid, .promise-grid, .flow-grid { grid-template-columns: 1fr; }
+      .sticky-cta { display: block; }
+      .hero-content { min-height: 94svh; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 0 14px; }
+      .btn { width: 100%; }
+      .hero-cta .btn, .order-panel .btn { max-width: none; }
+      .card .btn { width: auto; }
+      .sample-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="ページ情報">
+    <div class="wrap topbar-inner">
+      <div class="mark">AIスタンプ動画</div>
+      <div class="channel">夜のお店向け</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero">
+      <img class="hero-img" src="hero-night.jpg" alt="深紅のサテンドレスのバーテンダー・レイナ" loading="eager">
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="wrap hero-content">
+        <p class="eyebrow anim" style="--d:.1s">夜のお店のための営業動画</p>
+        <h1 class="anim" style="--d:.25s">あなたが主役の、<br><span class="gold">営業動画。</span></h1>
+        <p class="hero-lead anim" style="--d:.42s">あなたの写真が動き、あなたの声で挨拶する、<br>お店専用の営業動画です。</p>
+        <div class="hero-cta anim" style="--d:.58s">
+          <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォームへ</a>
+          <a class="btn secondary" href="#samples">作例を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO VIDEO -->
+    <div class="hero-video-band">
+      <div class="wrap">
+        <div class="ornate-frame rv">
+          <video autoplay muted loop controls playsinline preload="metadata" poster="night-poster.jpg" aria-label="バーテンダー・レイナの作例動画「いらっしゃい」">
+            <source src="B1-irasshai.mp4" type="video/mp4">
+            お使いのブラウザでは動画を再生できません。
+          </video>
+        </div>
+        <p class="video-caption rv">作例｜バーテンダー・レイナ <b>「いらっしゃい」</b></p>
+
+        <ul class="hero-points">
+          <li class="rv">必要なのは、<span class="nb"><b>本人の写真1枚</b>と</span><span class="nb"><b>店内の写真1枚</b>、</span><span class="nb"><b>スマホで録音した声</b>だけ</span></li>
+          <li class="rv" style="--d:.1s"><b>月額サービス料は、ありません</b></li>
+          <li class="rv" style="--d:.2s"><span class="nb"><b>店名ロゴ</b>と<b>締めの挨拶画面</b>が、</span><span class="nb">標準で入ります</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <section class="band alt" aria-labelledby="products-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Menu</p>
+          <h2 id="products-title">お店に合わせて、2つの形。</h2>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="product-grid">
+          <article class="card featured rv">
+            <p class="plan-name">夜版ベーシック</p>
+            <h3>あなたが主役の営業動画</h3>
+            <p>あなたの写真が動き、あなたの声で挨拶する、お店専用の営業動画です。</p>
+            <div class="price"><small>本体</small><br>9,800円〜</div>
+            <ul class="spec-list">
+              <li>本人の写真 1枚</li>
+              <li>店内の写真 1枚</li>
+              <li>自分の声を言葉ごとに送るだけ</li>
+              <li>店名ロゴと締めの挨拶画面入り</li>
+            </ul>
+            <div class="cta-row">
+              <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込む</a>
+              <a class="btn secondary" href="https://coconala.com/services/4521443" target="_blank" rel="noopener">ココナラ夜版</a>
+            </div>
+          </article>
+
+          <article class="card rv" style="--d:.1s">
+            <p class="plan-name">プロプラン</p>
+            <h3>言葉は全部オリジナル</h3>
+            <p>決まった言葉ではなく、お店や会社に合わせた言葉で作りたい方へ。</p>
+            <div class="price"><small>夜版</small><br>29,800円</div>
+            <ul class="spec-list">
+              <li>言葉を全部オリジナルで制作</li>
+              <li>雰囲気・衣装・場所を細かく指定</li>
+              <li>夜版は20本まで対応</li>
+              <li>名前入り呼びかけ込み</li>
+            </ul>
+            <div class="cta-row">
+              <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">プロで申し込む</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAMPLES -->
+    <section class="band" id="samples" aria-labelledby="samples-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Samples</p>
+          <h2 id="samples-title">作例をご覧ください。</h2>
+          <p>バーテンダー・レイナの作例です。挨拶の余韻が残る長さで作ります。</p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="sample-grid">
+          <article class="sample-card rv">
+            <video controls playsinline preload="metadata" poster="night-poster-n3.jpg" aria-label="レイナの作例動画「待ってるね」">
+              <source src="N3-matteru.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>レイナ｜待ってるね</h3>
+              <p>「待ってるね」</p>
+            </div>
+          </article>
+
+          <article class="sample-card rv" style="--d:.1s">
+            <video controls playsinline preload="metadata" poster="night-poster.jpg" aria-label="レイナの作例動画「いらっしゃい」">
+              <source src="B1-irasshai.mp4" type="video/mp4">
+            </video>
+            <div class="sample-body">
+              <h3>レイナ｜いらっしゃい</h3>
+              <p>「いらっしゃい」</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMISE -->
+    <section class="band alt" aria-labelledby="promise-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Promise</p>
+          <h2 id="promise-title">お店の挨拶だと、<br>一目で分かる作り。</h2>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="promise-grid">
+          <article class="promise rv">
+            <span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+            <h3>店名ロゴが入ります</h3>
+            <p>大きな店名ロゴが、標準で入ります。</p>
+          </article>
+
+          <article class="promise rv" style="--d:.1s">
+            <span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg></span>
+            <h3>締めの挨拶画面</h3>
+            <p>最後に締めの挨拶画面が入り、お店からの挨拶だと一目で分かります。</p>
+          </article>
+
+          <article class="promise rv" style="--d:.2s">
+            <span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/><path d="M9 11.5l2 2 4-4.5"/></svg></span>
+            <h3>お店の公式の挨拶に</h3>
+            <p>誰が見ても、個人的な動画ではなく、お店からの挨拶だと分かります。</p>
+          </article>
+        </div>
+
+        <div class="notice rv">完成動画の加工・改変・転売は禁止です。購入者ご本人・ご依頼のお店の業務、営業利用の範囲でお使いください。</div>
+      </div>
+    </section>
+
+    <!-- FLOW -->
+    <section class="band" aria-labelledby="flow-title">
+      <div class="wrap">
+        <div class="section-head rv">
+          <p class="section-label">Flow</p>
+          <h2 id="flow-title">申し込みは、3ステップ。</h2>
+          <p><span class="nb">細かい希望は、</span><span class="nb">フォームでボタンを選ぶだけ。</span><span class="nb">書く項目は少なくしてあります。</span></p>
+          <div class="gold-rule">◆</div>
+        </div>
+
+        <div class="flow-grid">
+          <article class="flow-card rv">
+            <div class="step-number">1</div>
+            <h3>フォームを送る</h3>
+            <p>プラン、使いたい言葉、雰囲気を選びます。</p>
+          </article>
+
+          <article class="flow-card rv" style="--d:.1s">
+            <div class="step-number">2</div>
+            <h3>写真と声を送る</h3>
+            <p>夜版は、本人の写真・店内の写真・自分の声を送るだけです。</p>
+          </article>
+
+          <article class="flow-card rv" style="--d:.2s">
+            <div class="step-number">3</div>
+            <h3>2〜3日で完成</h3>
+            <p>完成した動画を受け取って、LINEやInstagramですぐに使えます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER -->
+    <section class="band deep" aria-labelledby="order-title">
+      <div class="wrap">
+        <div class="order-panel rv">
+          <p class="section-label">Order</p>
+          <h2 id="order-title">まずは、<br><span class="nb">申し込みフォームから。</span></h2>
+          <p><span class="nb">言葉や仕上がりを指定したい方は、</span><span class="nb">フォームまたはココナラから</span><span class="nb">ご注文ください。</span></p>
+          <div class="cta-row">
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォーム</a>
+            <a class="btn secondary" href="https://coconala.com/services/4521443" target="_blank" rel="noopener">ココナラ夜版</a>
+          </div>
+        </div>
+
+        <div class="cross-link">
+          <a href="index.html">昼の仕事向けはこちら</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>AIスタンプ動画｜喋る動画スタンプ制作</footer>
+
+  <div class="sticky-cta">
+    <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeaPKu4ar3lH-6GVizDRuteIv7XKqCzebmkgZF6EDYZnf4WKQ/viewform" target="_blank" rel="noopener">申し込みフォームへ</a>
+  </div>
+
+  <script>
+    (function () {
+      if (!('IntersectionObserver' in window)) return;
+      document.documentElement.classList.add('js-rv');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</body>
+</html>
