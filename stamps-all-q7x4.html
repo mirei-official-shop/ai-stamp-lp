@@ -32,6 +32,12 @@
   body.night .btn:active { background: #3a2c1c; }
   body.night .sheet { background: #1f1a16; }
   body.night .close { background: #2c241c; color: #f3e9d2; }
+  body.male { background: #f4f8fd; }
+  body.male header { background: #3a7bd5; }
+  body.male .pick label { color: #2a5da8; }
+  body.male .pick select { border-color: #3a7bd5; }
+  body.male .btn { border-color: #a8c8ec; }
+  body.male .btn:active { background: #e1edfb; }
   body.dog { background: #fffaf3; }
   body.dog header { background: #ff9f43; }
   body.dog .pick label { color: #b96a12; }
@@ -71,7 +77,7 @@
   var overlay = document.getElementById('overlay');
   var shVideo = document.getElementById('sh-video');
   var current = null;
-  var THEMES = ["day","night","day","day","day","day","day","dog","dog"];
+  var THEMES = ["day","night","male","male","day","day","day","dog","dog"];
   function render(idx) {
     document.body.className = THEMES[idx] === "day" ? "" : THEMES[idx];
     grid.innerHTML = '';
