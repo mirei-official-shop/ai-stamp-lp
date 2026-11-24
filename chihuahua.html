@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スタンプ置き場（チワワ）</title>
+<style>
+  body { font-family: sans-serif; margin: 0; background: #fffaf3; color: #333; }
+  header { background: #ff9f43; color: #fff; padding: 12px 16px; font-size: 19px; font-weight: bold; }
+  .search { padding: 10px 12px; }
+  .search input { width: 100%; box-sizing: border-box; font-size: 17px; padding: 11px; border: 2px solid #ff9f43; border-radius: 10px; }
+  h2 { font-size: 16px; margin: 12px 12px 6px; color: #b96a12; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 8px; }
+  .btn { background: #fff; border: 2px solid #ffcf99; border-radius: 12px; padding: 13px 8px;
+         font-size: 15px; font-weight: bold; text-align: center; color: #333; }
+  .btn:active { background: #ffedd6; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 10; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0; padding: 14px; }
+  .sheet .phrase { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+  .sheet video { width: 100%; max-height: 52vh; border-radius: 8px; background: #000; }
+  .send { display: block; width: 100%; margin-top: 10px; padding: 14px; font-size: 17px; font-weight: bold;
+          color: #fff; background: #06c755; border: none; border-radius: 10px; }
+  .close { display: block; width: 100%; margin-top: 8px; padding: 11px; font-size: 15px;
+           background: #eee; border: none; border-radius: 10px; }
+</style>
+</head>
+<body>
+<header>スタンプ置き場（チワワ）</header>
+<div class="search"><input id="q" type="search" placeholder="言葉で探す（例：ごはん）"></div>
+<h2>制服チワワ（仕事の言葉）</h2>
+<div class="grid" id="grid-std"></div>
+<h2>チワワ（犬の言葉）</h2>
+<div class="grid" id="grid-dog"></div>
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <div class="phrase" id="sh-phrase"></div>
+    <video id="sh-video" playsinline controls></video>
+    <button class="send" id="sh-send">LINEに送る</button>
+    <button class="close" id="sh-close">閉じる</button>
+  </div>
+</div>
+<script>
+  var std = [
+    ["cs-01", "おはようございます"], ["cs-02", "お知らせです、お願いします"], ["cs-03", "了解です"],
+    ["cs-04", "書類、確認お願いします"], ["cs-05", "見積書、できました"], ["cs-06", "請求書、送りました"],
+    ["cs-07", "締め切り、明日までです"], ["cs-08", "会議、始まります"], ["cs-09", "ありがとうございます、助かります"],
+    ["cs-10", "お疲れさまです、もう一息です"], ["cs-11", "確認しました"], ["cs-12", "少々お待ちください"],
+    ["cs-13", "お任せください"], ["cs-14", "写真、送ってください"], ["cs-15", "雨で中止です"],
+    ["cs-16", "安全第一でお願いします"], ["cs-17", "変更がありました"], ["cs-18", "手配しました"],
+    ["cs-19", "あとで電話します"], ["cs-20", "明日もよろしくお願いします"]
+  ];
+  var dog = [
+    ["cd-01", "おはよう！"], ["cd-02", "おかえりなさい！"], ["cd-03", "いってらっしゃい！"],
+    ["cd-04", "ごはん、まだ？"], ["cd-05", "おやつ、ちょうだい！"], ["cd-06", "おさんぽ、行こう！"],
+    ["cd-07", "ありがとう！"], ["cd-08", "大好き！"], ["cd-09", "お留守番、してたよ"], ["cd-10", "おやすみ"]
+  ];
+  var overlay = document.getElementById('overlay');
+  var shVideo = document.getElementById('sh-video');
+  var current = null;
+  function fill(gridId, items, filter) {
+    var grid = document.getElementById(gridId);
+    grid.innerHTML = '';
+    items.forEach(function(it) {
+      if (filter && it[1].indexOf(filter) < 0) return;
+      var b = document.createElement('button');
+      b.className = 'btn';
+      b.textContent = it[1];
+      b.addEventListener('click', function() { openSheet(it); });
+      grid.appendChild(b);
+    });
+  }
+  function render(filter) { fill('grid-std', std, filter); fill('grid-dog', dog, filter); }
+  function openSheet(it) {
+    current = it;
+    document.getElementById('sh-phrase').textContent = it[1];
+    shVideo.src = it[0] + '.mp4';
+    overlay.style.display = 'block';
+    shVideo.play().catch(function() {});
+  }
+  function closeSheet() {
+    shVideo.pause();
+    shVideo.removeAttribute('src'); shVideo.load();
+    overlay.style.display = 'none';
+  }
+  document.getElementById('sh-close').addEventListener('click', closeSheet);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSheet(); });
+  document.getElementById('q').addEventListener('input', function(e) { render(e.target.value.trim()); });
+  document.getElementById('sh-send').addEventListener('click', function() {
+    if (!current) return;
+    var url = current[0] + '.mp4';
+    var phrase = current[1];
+    fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+      var file = new File([blob], phrase + '.mp4', { type: 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function() {});
+      } else if (navigator.share) {
+        navigator.share({ url: new URL(url, location.href).href }).catch(function() {});
+      } else {
+        location.href = url;
+      }
+    }).catch(function() { location.href = url; });
+  });
+  render('');
+</script>
+</body>
+</html>
