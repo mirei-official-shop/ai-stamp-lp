@@ -28,7 +28,6 @@
 </head>
 <body>
 <header>喋る動画スタンプ（チワワ・制服）</header>
-<div class="search"><input id="q" type="search" placeholder="言葉で探す（例：ごはん）"></div>
 <h2>仕事の言葉・20本</h2>
 <div class="grid" id="grid-std"></div>
 <div class="overlay" id="overlay">
@@ -80,8 +79,7 @@
   }
   document.getElementById('sh-close').addEventListener('click', closeSheet);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSheet(); });
-  document.getElementById('q').addEventListener('input', function(e) { render(e.target.value.trim()); });
-  document.getElementById('sh-send').addEventListener('click', function() {
+    document.getElementById('sh-send').addEventListener('click', function() {
     if (!current) return;
     var url = current[0] + '.mp4';
     var phrase = current[1];

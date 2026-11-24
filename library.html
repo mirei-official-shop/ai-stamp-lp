@@ -27,7 +27,6 @@
 </head>
 <body>
 <header>スタンプ置き場（サンプル）</header>
-<div class="search"><input id="q" type="search" placeholder="言葉で探す（例：見積）"></div>
 <div class="grid" id="grid"></div>
 <div class="overlay" id="overlay">
   <div class="sheet">
@@ -76,8 +75,7 @@
   }
   document.getElementById('sh-close').addEventListener('click', closeSheet);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSheet(); });
-  document.getElementById('q').addEventListener('input', function(e) { render(e.target.value.trim()); });
-  document.getElementById('sh-send').addEventListener('click', function() {
+    document.getElementById('sh-send').addEventListener('click', function() {
     if (!current) return;
     var url = 'lib-' + current[0] + '.mp4';
     var phrase = current[1];
