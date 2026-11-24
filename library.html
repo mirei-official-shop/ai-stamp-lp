@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スタンプ置き場（サンプル）</title>
+<style>
+  body { font-family: sans-serif; margin: 0; background: #fff7fa; color: #333; }
+  header { background: #ff5c8a; color: #fff; padding: 14px 16px; font-size: 20px; font-weight: bold; }
+  .note { padding: 10px 16px; font-size: 14px; color: #666; }
+  .item { background: #fff; margin: 10px 12px; border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .phrase { font-size: 19px; font-weight: bold; margin-bottom: 8px; }
+  video { width: 100%; border-radius: 8px; background: #000; }
+  .send { display: block; width: 100%; margin-top: 10px; padding: 13px; font-size: 17px; font-weight: bold;
+          color: #fff; background: #06c755; border: none; border-radius: 10px; }
+  .send:active { opacity: .7; }
+</style>
+</head>
+<body>
+<header>スタンプ置き場（サンプル）</header>
+<div class="note">ナツキの動画スタンプです。言葉を押すと再生、「LINEに送る」を押すと送る相手を選べます。</div>
+<div id="list"></div>
+<script>
+  var items = [
+    ["01", "おはようございます"],
+    ["05", "見積書、できました"],
+    ["09", "ありがとうございます、助かります"],
+    ["11", "確認しました"],
+    ["16", "安全第一でお願いします"],
+    ["20", "明日もよろしくお願いします"]
+  ];
+  var list = document.getElementById('list');
+  items.forEach(function(it) {
+    var num = it[0], phrase = it[1];
+    var url = 'lib-' + num + '.mp4';
+    var div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = '<div class="phrase">' + phrase + '</div>' +
+      '<video src="' + url + '" playsinline controls preload="metadata"></video>' +
+      '<button class="send">LINEに送る</button>';
+    div.querySelector('.send').addEventListener('click', function() { shareVideo(url, phrase); });
+    list.appendChild(div);
+  });
+  function shareVideo(url, phrase) {
+    fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+      var file = new File([blob], phrase + '.mp4', { type: 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function() {});
+      } else if (navigator.share) {
+        navigator.share({ url: new URL(url, location.href).href }).catch(function() {});
+      } else {
+        location.href = url;
+      }
+    }).catch(function() { location.href = url; });
+  }
+</script>
+</body>
+</html>
