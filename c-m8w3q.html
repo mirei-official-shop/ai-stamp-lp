@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="icon-night-app.png">
+<link rel="icon" type="image/png" href="icon-night-app.png">
+<title>喋る動画スタンプ</title>
+<style>
+  body { font-family: "Hiragino Mincho ProN", serif; margin: 0; background: #14100e; color: #f3e9d2; }
+  header { padding: 22px 16px 14px; text-align: center; border-bottom: 1px solid #8a6d3b; }
+  header .shop { font-size: 13px; letter-spacing: 3px; color: #c9a86a; }
+  header .title { font-size: 22px; margin-top: 6px; color: #e8cf8f; }
+  .search { padding: 12px 14px 4px; }
+  .search input { width: 100%; box-sizing: border-box; font-size: 16px; padding: 11px; border: 1px solid #8a6d3b;
+                  border-radius: 8px; background: #1f1a16; color: #f3e9d2; }
+  .list { padding: 10px 14px 20px; }
+  .btn { display: block; width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 17px 14px;
+         background: linear-gradient(180deg, #241c15, #1a140f); border: 1px solid #c9a86a; border-radius: 10px;
+         color: #f3e9d2; font-size: 18px; font-family: inherit; text-align: center; }
+  .btn:active { background: #3a2c1c; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 10; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: #1f1a16; border-top: 1px solid #c9a86a;
+           border-radius: 16px 16px 0 0; padding: 14px; }
+  .sheet .phrase { font-size: 18px; color: #e8cf8f; margin-bottom: 8px; text-align: center; }
+  .sheet video { width: 100%; max-height: 52vh; border-radius: 8px; background: #000; }
+  .send { display: block; width: 100%; margin-top: 12px; padding: 14px; font-size: 17px; font-weight: bold;
+          color: #14100e; background: linear-gradient(180deg, #e8cf8f, #c9a86a); border: none; border-radius: 10px; }
+  .close { display: block; width: 100%; margin-top: 8px; padding: 11px; font-size: 15px;
+           background: #2c241c; color: #f3e9d2; border: 1px solid #8a6d3b; border-radius: 10px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="shop">椛</div>
+  <div class="title">喋る動画スタンプ</div>
+</header>
+<div class="list" id="list"></div>
+<div style="text-align:center; padding: 6px 16px 22px; font-size: 12px; color: #8a7a5c;">
+  ミレイ公式ショップ<br>この動画の転売・再配布・加工は禁止です
+</div>
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <div class="phrase" id="sh-phrase"></div>
+    <video id="sh-video" playsinline controls></video>
+    <button class="send" id="sh-send">送る</button>
+    <button class="close" id="sh-close">閉じる</button>
+  </div>
+</div>
+<script>
+  var items = [
+    ["yk-01", "いらっしゃいませ"],
+    ["yk-02", "この前はありがとう"],
+    ["yk-03", "待ってるね"],
+    ["yk-04", "今日、出てるよ"],
+    ["yk-05", "久しぶりだね"],
+    ["yk-07", "気をつけて帰ってね"],
+    ["yk-08", "また来てね"],
+    ["yk-09", "乾杯"],
+    ["yk-10", "ふふ、内緒"]
+  ];
+  var list = document.getElementById('list');
+  var overlay = document.getElementById('overlay');
+  var shVideo = document.getElementById('sh-video');
+  var current = null;
+  function render(filter) {
+    list.innerHTML = '';
+    items.forEach(function(it) {
+      if (filter && it[1].indexOf(filter) < 0) return;
+      var b = document.createElement('button');
+      b.className = 'btn';
+      b.textContent = it[1];
+      b.addEventListener('click', function() { openSheet(it); });
+      list.appendChild(b);
+    });
+  }
+  function openSheet(it) {
+    current = it;
+    document.getElementById('sh-phrase').textContent = it[1];
+    shVideo.src = it[0] + '.mp4';
+    overlay.style.display = 'block';
+    shVideo.play().catch(function() {});
+  }
+  function closeSheet() {
+    shVideo.pause();
+    shVideo.removeAttribute('src'); shVideo.load();
+    overlay.style.display = 'none';
+  }
+  document.getElementById('sh-close').addEventListener('click', closeSheet);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSheet(); });
+    document.getElementById('sh-send').addEventListener('click', function() {
+    if (!current) return;
+    var url = current[0] + '.mp4';
+    var phrase = current[1];
+    fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+      var file = new File([blob], phrase + '.mp4', { type: 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function() {});
+      } else if (navigator.share) {
+        navigator.share({ url: new URL(url, location.href).href }).catch(function() {});
+      } else {
+        location.href = url;
+      }
+    }).catch(function() { location.href = url; });
+  });
+  render('');
+</script>
+</body>
+</html>
