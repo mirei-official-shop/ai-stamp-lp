@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="icon-day-app.png">
+<link rel="icon" type="image/png" href="icon-day-app.png">
+<title>喋る動画スタンプ（全部入り）</title>
+<style>
+  body { font-family: sans-serif; margin: 0; background: #fdf6f8; color: #333; }
+  header { background: #ff5c8a; color: #fff; padding: 13px 16px; font-size: 19px; font-weight: bold; }
+  .pick { padding: 12px; }
+  .pick label { font-size: 14px; font-weight: bold; color: #b03060; display: block; margin-bottom: 6px; }
+  .pick select { width: 100%; box-sizing: border-box; font-size: 18px; padding: 12px; border: 2px solid #ff5c8a; border-radius: 10px; background: #fff; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 2px 12px 18px; }
+  .btn { background: #fff; border: 2px solid #ffc2d4; border-radius: 12px; padding: 13px 8px;
+         font-size: 15px; font-weight: bold; text-align: center; color: #333; }
+  .btn:active { background: #ffe3ec; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 10; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0; padding: 14px; }
+  .sheet .phrase { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+  .sheet video { width: 100%; max-height: 52vh; border-radius: 8px; background: #000; }
+  .send { display: block; width: 100%; margin-top: 10px; padding: 14px; font-size: 17px; font-weight: bold;
+          color: #fff; background: #06c755; border: none; border-radius: 10px; }
+  .close { display: block; width: 100%; margin-top: 8px; padding: 11px; font-size: 15px;
+           background: #eee; border: none; border-radius: 10px; }
+</style>
+</head>
+<body>
+<header>喋る動画スタンプ（全部入り）</header>
+<div class="pick">
+  <label>誰のスタンプにしますか</label>
+  <select id="who">
+      <option value="0">レイナ（昼）</option>
+      <option value="1">レイナ（夜）</option>
+      <option value="2">イケ兄</option>
+      <option value="3">イケおじ</option>
+      <option value="4">ナツキ</option>
+      <option value="5">モモカ</option>
+      <option value="6">ひより</option>
+      <option value="7">チワワ（制服）</option>
+      <option value="8">チワワ（犬の言葉）</option>
+  </select>
+</div>
+<div class="grid" id="grid"></div>
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <div class="phrase" id="sh-phrase"></div>
+    <video id="sh-video" playsinline controls></video>
+    <button class="send" id="sh-send">送る</button>
+    <button class="close" id="sh-close">閉じる</button>
+  </div>
+</div>
+<script>
+  var SETS = [["レイナ（昼）", [["rd-01", "おはようございます"], ["rd-02", "お知らせです、お願いします"], ["rd-03", "了解です"], ["rd-04", "書類、確認お願いします"], ["rd-05", "見積書、できました"], ["rd-06", "請求書、送りました"], ["rd-07", "締め切り、明日までです"], ["rd-08", "会議、始まります"], ["rd-09", "ありがとうございます、助かります"], ["rd-10", "お疲れさまです、もう一息です"], ["rd-11", "確認しました"], ["rd-12", "少々お待ちください"], ["rd-13", "お任せください"], ["rd-14", "写真、送ってください"], ["rd-15", "雨で中止です"], ["rd-16", "安全第一でお願いします"], ["rd-17", "変更がありました"], ["rd-18", "手配しました"], ["rd-19", "あとで電話します"], ["rd-20", "明日もよろしくお願いします"]]], ["レイナ（夜）", [["nt-b1", "いらっしゃいませ"], ["nt-b2", "いつもの？"], ["nt-n2", "今日、出てるよ"], ["nt-n3", "待ってるね"], ["nt-n4", "久しぶりだね"], ["nt-n5", "誕生日おめでとう"], ["nt-n6", "気をつけて帰ってね"], ["nt-b4", "ふふ、内緒"]]], ["イケ兄", [["ya-01", "おはようございます"], ["ya-02", "お知らせです、お願いします"], ["ya-03", "了解です"], ["ya-04", "書類、確認お願いします"], ["ya-05", "見積書、できました"], ["ya-06", "請求書、送りました"], ["ya-07", "締め切り、明日までです"], ["ya-08", "会議、始まります"], ["ya-09", "ありがとうございます、助かります"], ["ya-10", "お疲れさまです、もう一息です"], ["ya-11", "確認しました"], ["ya-12", "少々お待ちください"], ["ya-13", "お任せください"], ["ya-14", "写真、送ってください"], ["ya-15", "雨で中止です"], ["ya-16", "安全第一でお願いします"], ["ya-17", "変更がありました"], ["ya-18", "手配しました"], ["ya-19", "あとで電話します"], ["ya-20", "明日もよろしくお願いします"]]], ["イケおじ", [["ma-01", "おはようございます"], ["ma-02", "お知らせです、お願いします"], ["ma-03", "了解です"], ["ma-04", "書類、確認お願いします"], ["ma-05", "見積書、できました"], ["ma-06", "請求書、送りました"], ["ma-07", "締め切り、明日までです"], ["ma-08", "会議、始まります"], ["ma-09", "ありがとうございます、助かります"], ["ma-10", "お疲れさまです、もう一息です"], ["ma-11", "確認しました"], ["ma-12", "少々お待ちください"], ["ma-13", "お任せください"], ["ma-14", "写真、送ってください"], ["ma-15", "雨で中止です"], ["ma-16", "安全第一でお願いします"], ["ma-17", "変更がありました"], ["ma-18", "手配しました"], ["ma-19", "あとで電話します"], ["ma-20", "明日もよろしくお願いします"]]], ["ナツキ", [["lib-01", "おはようございます"], ["lib-02", "お知らせです、お願いします"], ["lib-03", "了解です"], ["lib-04", "書類、確認お願いします"], ["lib-05", "見積書、できました"], ["lib-06", "請求書、送りました"], ["lib-07", "締め切り、明日までです"], ["lib-08", "会議、始まります"], ["lib-09", "ありがとうございます、助かります"], ["lib-10", "お疲れさまです、もう一息です"], ["lib-11", "確認しました"], ["lib-12", "少々お待ちください"], ["lib-13", "お任せください"], ["lib-14", "写真、送ってください"], ["lib-15", "雨で中止です"], ["lib-16", "安全第一でお願いします"], ["lib-17", "変更がありました"], ["lib-18", "手配しました"], ["lib-19", "あとで電話します"], ["lib-20", "明日もよろしくお願いします"]]], ["モモカ", [["mo-01", "おはようございます"], ["mo-02", "お知らせです、お願いします"], ["mo-03", "了解です"], ["mo-04", "書類、確認お願いします"], ["mo-05", "見積書、できました"], ["mo-06", "請求書、送りました"], ["mo-07", "締め切り、明日までです"], ["mo-08", "会議、始まります"], ["mo-09", "ありがとうございます、助かります"], ["mo-10", "お疲れさまです、もう一息です"], ["mo-11", "確認しました"], ["mo-12", "少々お待ちください"], ["mo-13", "お任せください"], ["mo-14", "写真、送ってください"], ["mo-15", "雨で中止です"], ["mo-16", "安全第一でお願いします"], ["mo-17", "変更がありました"], ["mo-18", "手配しました"], ["mo-19", "あとで電話します"], ["mo-20", "明日もよろしくお願いします"]]], ["ひより", [["hi-01", "おはようございます"], ["hi-02", "お知らせです、お願いします"], ["hi-03", "了解です"], ["hi-04", "書類、確認お願いします"], ["hi-05", "見積書、できました"], ["hi-06", "請求書、送りました"], ["hi-07", "締め切り、明日までです"], ["hi-08", "会議、始まります"], ["hi-09", "ありがとうございます、助かります"], ["hi-10", "お疲れさまです、もう一息です"], ["hi-11", "確認しました"], ["hi-12", "少々お待ちください"], ["hi-13", "お任せください"], ["hi-14", "写真、送ってください"], ["hi-15", "雨で中止です"], ["hi-16", "安全第一でお願いします"], ["hi-17", "変更がありました"], ["hi-18", "手配しました"], ["hi-19", "あとで電話します"], ["hi-20", "明日もよろしくお願いします"]]], ["チワワ（制服）", [["cs-01", "おはようございます"], ["cs-02", "お知らせです、お願いします"], ["cs-03", "了解です"], ["cs-04", "書類、確認お願いします"], ["cs-05", "見積書、できました"], ["cs-06", "請求書、送りました"], ["cs-07", "締め切り、明日までです"], ["cs-08", "会議、始まります"], ["cs-09", "ありがとうございます、助かります"], ["cs-10", "お疲れさまです、もう一息です"], ["cs-11", "確認しました"], ["cs-12", "少々お待ちください"], ["cs-13", "お任せください"], ["cs-14", "写真、送ってください"], ["cs-15", "雨で中止です"], ["cs-16", "安全第一でお願いします"], ["cs-17", "変更がありました"], ["cs-18", "手配しました"], ["cs-19", "あとで電話します"], ["cs-20", "明日もよろしくお願いします"]]], ["チワワ（犬の言葉）", [["cd-01", "おはよう！"], ["cd-02", "おかえりなさい！"], ["cd-03", "いってらっしゃい！"], ["cd-04", "ごはん、まだ？"], ["cd-05", "おやつ、ちょうだい！"], ["cd-06", "おさんぽ、行こう！"], ["cd-07", "ありがとう！"], ["cd-08", "大好き！"], ["cd-09", "お留守番、してたよ"], ["cd-10", "おやすみ"]]]];
+  var grid = document.getElementById('grid');
+  var overlay = document.getElementById('overlay');
+  var shVideo = document.getElementById('sh-video');
+  var current = null;
+  function render(idx) {
+    grid.innerHTML = '';
+    SETS[idx][1].forEach(function(it) {
+      var b = document.createElement('button');
+      b.className = 'btn';
+      b.textContent = it[1];
+      b.addEventListener('click', function() { openSheet(it); });
+      grid.appendChild(b);
+    });
+  }
+  function openSheet(it) {
+    current = it;
+    document.getElementById('sh-phrase').textContent = it[1];
+    shVideo.src = it[0] + '.mp4';
+    overlay.style.display = 'block';
+    shVideo.play().catch(function() {});
+  }
+  function closeSheet() {
+    shVideo.pause();
+    shVideo.removeAttribute('src'); shVideo.load();
+    overlay.style.display = 'none';
+  }
+  document.getElementById('who').addEventListener('change', function(e) { render(parseInt(e.target.value, 10)); });
+  document.getElementById('sh-close').addEventListener('click', closeSheet);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSheet(); });
+  document.getElementById('sh-send').addEventListener('click', function() {
+    if (!current) return;
+    var url = current[0] + '.mp4';
+    var phrase = current[1];
+    fetch(url).then(function(r) { return r.blob(); }).then(function(blob) {
+      var file = new File([blob], phrase + '.mp4', { type: 'video/mp4' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function() {});
+      } else if (navigator.share) {
+        navigator.share({ url: new URL(url, location.href).href }).catch(function() {});
+      } else {
+        location.href = url;
+      }
+    }).catch(function() { location.href = url; });
+  });
+  render(0);
+</script>
+</body>
+</html>
