@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>スタンプ置き場（チワワ）</title>
+<title>喋る動画スタンプ（チワワ・制服）</title>
 <style>
   body { font-family: sans-serif; margin: 0; background: #fffaf3; color: #333; }
   header { background: #ff9f43; color: #fff; padding: 12px 16px; font-size: 19px; font-weight: bold; }
@@ -25,12 +25,10 @@
 </style>
 </head>
 <body>
-<header>スタンプ置き場（チワワ）</header>
+<header>喋る動画スタンプ（チワワ・制服）</header>
 <div class="search"><input id="q" type="search" placeholder="言葉で探す（例：ごはん）"></div>
-<h2>制服チワワ（仕事の言葉）</h2>
+<h2>仕事の言葉・20本</h2>
 <div class="grid" id="grid-std"></div>
-<h2>チワワ（犬の言葉）</h2>
-<div class="grid" id="grid-dog"></div>
 <div class="overlay" id="overlay">
   <div class="sheet">
     <div class="phrase" id="sh-phrase"></div>
@@ -49,11 +47,7 @@
     ["cs-16", "安全第一でお願いします"], ["cs-17", "変更がありました"], ["cs-18", "手配しました"],
     ["cs-19", "あとで電話します"], ["cs-20", "明日もよろしくお願いします"]
   ];
-  var dog = [
-    ["cd-01", "おはよう！"], ["cd-02", "おかえりなさい！"], ["cd-03", "いってらっしゃい！"],
-    ["cd-04", "ごはん、まだ？"], ["cd-05", "おやつ、ちょうだい！"], ["cd-06", "おさんぽ、行こう！"],
-    ["cd-07", "ありがとう！"], ["cd-08", "大好き！"], ["cd-09", "お留守番、してたよ"], ["cd-10", "おやすみ"]
-  ];
+  var dog = [];
   var overlay = document.getElementById('overlay');
   var shVideo = document.getElementById('sh-video');
   var current = null;
@@ -69,7 +63,7 @@
       grid.appendChild(b);
     });
   }
-  function render(filter) { fill('grid-std', std, filter); fill('grid-dog', dog, filter); }
+  function render(filter) { fill('grid-std', std, filter); }
   function openSheet(it) {
     current = it;
     document.getElementById('sh-phrase').textContent = it[1];
